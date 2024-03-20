@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crossword Puzzle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="modal" class="hidden centered-box">
+        <div id="choices" class="hidden">
+            <p id="choices-message" class="hidden">Choose one!</p>
+            <button onclick="hideModal()">Dinner + Movie</button>
+            <button onclick="hideModal()">Self care night</button>
+            <button onclick="hideModal()">Night out in the city</button>
+            <button onclick="hideModal()">Puzzle + Movie</button>
+        </div>
+        <div id="image-container" class="hidden centered-box">
+            <img src="https://i.pinimg.com/originals/f4/ce/3d/f4ce3d025a0d1083fa1fe223db773699.jpg" alt="Are you sure?">
+            <div id="no-message" class="hidden">
+                Are you sure? BABY
+                <button onclick="goBack()">Go back</button>
+            </div>
+        </div>
+        <div id="initial-message" class="success-box centered-box">
+            <p>Solve this Crossword!</p>
+            <button onclick="document.getElementById('initial-message').classList.add('hidden')">Solve</button>
+        </div>
+        <div id="success-message" class="hidden success-box">
+            <p>Step 1 is done! Now for the next part, just click on what you would prefer! <a href="#" onclick="showChoicesModal()">Click here</a></p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="crosswordDisplay" id="crossword">
+            <!-- Crossword grid will be dynamically generated here -->
+        </div>
+        <div id="clues">
+            <div class="clueBlock">
+                <p class="clueDirection">Across</p>
+                <div id="cluesAcross"></div>
+            </div>
+            <div class="clueBlock">
+                <p class="clueDirection">Down</p>
+                <div id="cluesDown"></div>
+            </div>
+        </div>
+    </div>
+
+    <button id="btnGen" class="btn">Generate</button>
+    <button id="btnPlay" class="btn">Play</button>
+    <button id="btnCreate" class="btn">Create</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
