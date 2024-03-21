@@ -22,16 +22,12 @@
                 <button onclick="goBack()">Go back</button>
             </div>
         </div>
-        <div id="initial-message" class="success-box centered-box">
-            <p>Solve this Crossword!</p>
-            <button onclick="document.getElementById('initial-message').classList.add('hidden')">Solve</button>
-        </div>
         <div id="success-message" class="hidden success-box">
             <p>Step 1 is done! Now for the next part, just click on what you would prefer! <a href="#" onclick="showChoicesModal()">Click here</a></p>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" id="crossword-container">
         <div class="crosswordDisplay" id="crossword">
             <!-- Crossword grid will be dynamically generated here -->
         </div>
@@ -45,12 +41,37 @@
                 <div id="cluesDown"></div>
             </div>
         </div>
+        <button id="btnCheck" class="btn" onclick="checkSolution()">Check</button>
+        <button id="btnReset" class="btn" onclick="resetCrossword()">Reset</button>
     </div>
 
-    <button id="btnGen" class="btn">Generate</button>
-    <button id="btnPlay" class="btn">Play</button>
-    <button id="btnCreate" class="btn">Create</button>
+    <!-- Happy 3 months message -->
+    <div id="happy-message" class="hidden centered-box">
+        <p>Happy 3 months!</p>
+    </div>
+
+    <!-- Flower image -->
+    <img id="flower" src="https://www.pngkey.com/png/full/740-7401195_flowers-vector-png-transparent-background-flower-png-vector.png" alt="Flower" style="position: absolute; top: 50px; left: 50px; display: none;">
 
     <script src="script.js"></script>
+    <script>
+        // Function to show happy message and flowers
+        function showHappyMessage() {
+            document.getElementById("happy-message").classList.remove("hidden");
+            document.getElementById("flower").style.display = "block";
+        }
+
+        // Function to hide crossword and show step 1 message
+        function hideCrosswordShowMessage() {
+            document.getElementById("crossword-container").style.display = "none";
+            document.getElementById("success-message").classList.remove("hidden");
+        }
+
+        // Function to hide step 1 message and show happy message
+        function hideMessageShowHappyMessage() {
+            document.getElementById("success-message").classList.add("hidden");
+            showHappyMessage();
+        }
+    </script>
 </body>
 </html>
