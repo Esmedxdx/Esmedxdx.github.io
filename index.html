@@ -1,77 +1,371 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crossword Puzzle</title>
-    <link rel="stylesheet" href="style.css">
+<title>Crossword Puzzle</title>
+<style>
+body {
+    font-family: Courier, monospace;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#container {
+    display: left;
+    justify-content: flex;
+    align-items: flex-start; /* Align items to the top */
+    margin-top: 20px; 
+}
+
+#crossword-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+#crossword-container {
+    border: 2px solid black;
+    padding: 10px;
+}
+
+#crossword {
+    text-align: center;
+}
+
+/* Add this rule to change hints text color to black */
+#hintsTable td {
+    color: black;
+    padding: 10px;
+}
+
+#crossword td {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+}
+
+#buttons{
+    text-align: center;
+}
+tr{
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+}
+td{
+    height: 30px;
+    width: 30px;
+}
+#leftBox{
+    float: left;
+}
+#rightBox{
+    margin-left: 40px;
+}
+.butt{
+    height:30px;
+    width: 65px;
+    margin: 5px;
+}
+#puzzel{
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+.inputBox{
+    width: 40px;
+    height:40px;
+    border: 1px solid black;
+    text-align: center;
+    font-size: 20px;
+}
+
+#hintsTable{
+    margin-top: 20px;
+    margin-right: 20px;
+}
+.hidden {
+    display: none;
+}
+.success-box {
+    background-color: white;
+    padding: 20px;
+    border: 1px solid black;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+.centered-box {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+#image-container img {
+    max-width: 200px;
+    max-height: 200px;
+}
+
+</style>
+<script>
+//Globals
+var currentTextInput;
+var puzzelArrayData;
+//Loads the Crossword
+function initializeScreen(){
+    var puzzelTable = document.getElementById("crossword");
+    puzzelArrayData = preparePuzzelArray();
+    for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+        var row = puzzelTable.insertRow(-1);
+        var rowData = puzzelArrayData[i];
+        for(var j = 0 ; j < rowData.length ; j++){
+            var cell = row.insertCell(-1);
+            if(rowData[j] != 0){
+                var txtID = String('txt' + '_' + i + '_' + j);
+                cell.innerHTML = '<input type="text" class="inputBox" maxlength="1" style="text-transform: lowercase" ' + 'id="' + txtID + '" onfocus="textInputFocus(' + "'" + txtID + "'"+ ')">';
+            }else{
+                cell.style.backgroundColor  = "black";
+            }
+        }
+    }
+    addHint();
+
+}
+
+//Adds the hint numbers
+function addHint(){
+    document.getElementById("txt_0_4").placeholder = "1";
+    document.getElementById("txt_2_6").placeholder = "2";
+    document.getElementById("txt_3_1").placeholder = "3";
+    document.getElementById("txt_3_9").placeholder = "4";
+    document.getElementById("txt_6_2").placeholder = "5";
+    document.getElementById("txt_9_0").placeholder = "6";
+}
+
+//Stores ID of the selected cell into currentTextInput
+function textInputFocus(txtID){
+    currentTextInput = txtID;
+}
+
+//Returns Array
+function preparePuzzelArray(){
+var items = [   [0, 0, 0, 0, 'p', 0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 'u', 0, 0, 0, 0, 0 ],
+                [0, 0, 0, 0, 'n', 0, 'b', 0, 0, 0],
+                [0, 'h', 'y', 'd', 'e', 'r', 'a', 'b', 'a', 'd'],
+                [0, 0, 0, 0, 0, 0, 'n', 0, 0, 'e'],
+                [0, 0, 0, 0, 0, 0, 'g', 0, 0, 'l'],
+                [0, 0, 'm', 'u', 'm', 'b', 'a', 'i', 0, 'h'],
+                [0, 0, 0, 0, 0, 0, 'l', 0, 0, 'i'],
+                [0, 0, 0, 0, 0, 0, 'o', 0, 0, 0],
+                ['k', 'a', 's', 'h', 'm', 'i','r', 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 'e', 0, 0, 0]
+            ];
+return items;
+}
+
+//Clear All Button
+function clearAllClicked(){
+    currentTextInput = '';
+    var puzzelTable = document.getElementById("crossword");
+    puzzelTable.innerHTML = '';
+    initializeScreen();
+}
+
+//Check button
+function checkClicked(){
+    for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+        var rowData = puzzelArrayData[i];
+        for(var j = 0 ; j < rowData.length ; j++){
+            if(rowData[j] != 0){
+                var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+                if(selectedInputTextElement.value != puzzelArrayData[i][j]){
+                    selectedInputTextElement.style.backgroundColor = 'red';
+                    
+                }else{
+                    selectedInputTextElement.style.backgroundColor = 'white';
+                }
+            }
+        }
+    }
+    var isCorrect = true;
+    for ( var i = 0; i < puzzelArrayData.length ; i++ ) {
+        var rowData = puzzelArrayData[i];
+        for(var j = 0 ; j < rowData.length ; j++){
+            if(rowData[j] != 0){
+                var selectedInputTextElement = document.getElementById('txt' + '_' + i + '_' + j);
+                if(selectedInputTextElement.value.toLowerCase() != puzzelArrayData[i][j]){
+                    isCorrect = false;
+                    break;
+                }
+            }
+        }
+    }
+    if(isCorrect){
+        document.getElementById('success-message').classList.remove('hidden');
+        document.getElementById('puzzel').style.opacity = "0.5";
+        alert('Incorrect solution!');
+    }
+}
+
+//Show Choices Modal
+function showChoicesModal() {
+    document.getElementById('success-message').classList.add('hidden');
+    document.getElementById('modal').classList.remove('hidden');
+}
+
+// Hide Modal
+function hideModal() {
+    document.getElementById('modal').classList.add('hidden');
+}
+
+// Choice Clicked
+function choiceClicked(choice) {
+    hideModal();
+    var messageBox = document.createElement('div');
+    messageBox.classList.add('success-box');
+    messageBox.classList.add('centered-box');
+    var message = "Choose one! Take a pic/screenshot in the end just so I know what you chose!";
+    var imageUrl = "";
+    var buttonText = "";
+    if (choice === "yes") {
+        messageBox.innerHTML = '<p>' + message + '</p>' +
+            '<button onclick="choiceClicked(\'dinnerAndMovie\')">Dinner + Movie</button>' +
+            '<button onclick="choiceClicked(\'selfCareNight\')">Self care night</button>' +
+            '<button onclick="choiceClicked(\'nightOut\')">Night out in the city</button>' +
+            '<button onclick="choiceClicked(\'puzzleAndMovie\')">Puzzle + Movie</button>';
+    } else {
+        switch (choice) {
+            case "dinnerAndMovie":
+                messageBox.innerHTML = '<p>' + message + '</p>' +
+                    '<button onclick="choiceClicked(\'watchClassic\')">Watch a classic</button>' +
+                    '<button onclick="choiceClicked(\'watchNew\')">Watch something new</button>' +
+                    '<button onclick="choiceClicked(\'startTvShow\')">Start a TV show</button>';
+                break;
+            case "selfCareNight":
+                message = "A self-care night with face masks while we watch something.";
+                imageUrl = "https://i.pinimg.com/564x/a5/a1/87/a5a187902e3f856f5bd4b04451e87d5c.jpg";
+                break;
+            case "nightOut":
+                message = "It'll be cheap and fun! love you!";
+                imageUrl = "https://i.pinimg.com/564x/1e/d8/1f/1ed81f5fe1f65c7f392216dbe60b622a.jpg";
+                break;
+            case "puzzleAndMovie":
+                message = "We can choose a puzzle/lego and do it together while watching a movie! I love you!";
+                imageUrl = "https://i.pinimg.com/564x/65/a0/fb/65a0fbbd642e1e4084437e1e8ba2a2cb.jpg";
+                break;
+            case "watchClassic":
+                message = "Perfect!";
+                imageUrl = "https://i.pinimg.com/564x/c6/fd/53/c6fd53ca1f72bc370a2fa1f4691a12f4.jpg";
+                break;
+            case "watchNew":
+                message = "Watch something new";
+                break;
+            case "startTvShow":
+                message = "Start a TV show";
+                break;
+            default:
+                break;
+        }
+        var imageElement = document.createElement('img');
+        imageElement.src = imageUrl;
+        imageElement.style.maxWidth = "200px";
+        imageElement.style.maxHeight = "200px";
+        imageElement.style.display = "block";
+        imageElement.style.margin = "0 auto";
+        messageBox.appendChild(imageElement);
+    }
+    var messageElement = document.createElement('p');
+    messageElement.innerText = message;
+    messageBox.appendChild(messageElement);
+    document.body.appendChild(messageBox);
+}
+
+
+
+
+// Are you sure modal
+function areYouSure() {
+    var answer = confirm("Are you sure?");
+    if (answer) {
+        // Show the image and message
+        document.getElementById('image-container').classList.remove('hidden');
+        document.getElementById('no-message').classList.remove('hidden');
+        document.getElementById('choices').classList.add('hidden');
+        document.getElementById('modal').classList.add('hidden');
+    }
+}
+
+// Go back function
+function goBack() {
+    document.getElementById('image-container').classList.add('hidden');
+    document.getElementById('no-message').classList.add('hidden');
+    document.getElementById('modal').classList.remove('hidden');
+}
+
+</script>
 </head>
-<body>
-    <div id="modal" class="hidden centered-box">
-        <div id="choices" class="hidden">
-            <p id="choices-message" class="hidden">Choose one!</p>
-            <button onclick="hideModal()">Dinner + Movie</button>
-            <button onclick="hideModal()">Self care night</button>
-            <button onclick="hideModal()">Night out in the city</button>
-            <button onclick="hideModal()">Puzzle + Movie</button>
-        </div>
-        <div id="image-container" class="hidden centered-box">
-            <img src="https://i.pinimg.com/originals/f4/ce/3d/f4ce3d025a0d1083fa1fe223db773699.jpg" alt="Are you sure?">
-            <div id="no-message" class="hidden">
-                Are you sure? BABY
-                <button onclick="goBack()">Go back</button>
-            </div>
-        </div>
-        <div id="success-message" class="hidden success-box">
-            <p>Step 1 is done! Now for the next part, just click on what you would prefer! <a href="#" onclick="showChoicesModal()">Click here</a></p>
-        </div>
+<body onload="initializeScreen()">
+<h1 id="crossword-title">Crossword</h1>
+<div id="container">
+<div id="crossword-container">
+    <table id="crossword"></table>
+</div id="buttons">
+
+    <tr><td><input class="butt"  type="submit" value="Clear All" onclick="clearAllClicked()"></td>
+    <td><input class="butt"  type="submit" value="Check" onclick="checkClicked()"></td></tr>
+
+</div>
+</div>
+<div id="rightBox">
+<table id="hintsTable">
+        <tr>
+            <td><strong>Horizontal:</strong></td>
+            <td><strong>Vertical:</strong></td>
+        </tr>
+        <tr>
+            <td>3. Cultural Hub (Hyderabad)</td><td>1. Education Hub (Pune)</td>
+        </tr>
+        <tr>
+            <td>5. India's financial capital (Mumbai)</td>
+            <td>2. Information Technology Hub (Bangalore)</td>
+        </tr>
+        <tr>
+            <td>6. Saffron region (Kashmir)</td>
+            <td>4. Capital of India (Delhi)</td>
+        </tr>
+</table>
+</div>
+
+<div id="success-message" class="hidden success-box">
+    <p>Step 1 is done! Now for the next part, just click on what you would prefer! <a href="#" onclick="showChoicesModal()">Click here</a></p>
+</div>
+
+<div id="modal" class="hidden success-box centered-box">
+    Will you go out with me?
+</div>
+
+
+<div id="choices" class="hidden">
+    <p id="choices-message" class="hidden">Choose one!</p>
+    <button onclick="hideModal()">Dinner + Movie</button>
+    <button onclick="hideModal()">Self care night</button>
+    <button onclick="hideModal()">Night out in the city</button>
+    <button onclick="hideModal()">Puzzle + Movie</button>
+</div>
+
+<div id="image-container" class="hidden centered-box">
+    <img src="https://i.pinimg.com/originals/f4/ce/3d/f4ce3d025a0d1083fa1fe223db773699.jpg" alt="Are you sure?">
+    <div id="no-message" class="hidden">
+        Are you sure? BABY
+        <button onclick="goBack()">Go back</button>
     </div>
+</div>
 
-    <div class="container" id="crossword-container">
-        <div class="crosswordDisplay" id="crossword">
-            <!-- Crossword grid will be dynamically generated here -->
-        </div>
-        <div id="clues">
-            <div class="clueBlock">
-                <p class="clueDirection">Across</p>
-                <div id="cluesAcross"></div>
-            </div>
-            <div class="clueBlock">
-                <p class="clueDirection">Down</p>
-                <div id="cluesDown"></div>
-            </div>
-        </div>
-        <button id="btnCheck" class="btn" onclick="checkSolution()">Check</button>
-        <button id="btnReset" class="btn" onclick="resetCrossword()">Reset</button>
-    </div>
-
-    <!-- Happy 3 months message -->
-    <div id="happy-message" class="hidden centered-box">
-        <p>Happy 3 months!</p>
-    </div>
-
-    <!-- Flower image -->
-    <img id="flower" src="https://www.pngkey.com/png/full/740-7401195_flowers-vector-png-transparent-background-flower-png-vector.png" alt="Flower" style="position: absolute; top: 50px; left: 50px; display: none;">
-
-    <script src="script.js"></script>
-    <script>
-        // Function to show happy message and flowers
-        function showHappyMessage() {
-            document.getElementById("happy-message").classList.remove("hidden");
-            document.getElementById("flower").style.display = "block";
-        }
-
-        // Function to hide crossword and show step 1 message
-        function hideCrosswordShowMessage() {
-            document.getElementById("crossword-container").style.display = "none";
-            document.getElementById("success-message").classList.remove("hidden");
-        }
-
-        // Function to hide step 1 message and show happy message
-        function hideMessageShowHappyMessage() {
-            document.getElementById("success-message").classList.add("hidden");
-            showHappyMessage();
-        }
-    </script>
 </body>
 </html>
